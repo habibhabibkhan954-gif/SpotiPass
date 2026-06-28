@@ -24,10 +24,17 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file(localProps.getProperty("RELEASE_STORE_FILE", ""))
-            storePassword = localProps.getProperty("RELEASE_STORE_PASSWORD", "")
-            keyAlias = localProps.getProperty("RELEASE_KEY_ALIAS", "")
-            keyPassword = localProps.getProperty("RELEASE_KEY_PASSWORD", "")
+            val relStoreFile = localProps.getProperty("RELEASE_STORE_FILE") ?: System.getenv("RELEASE_KEYSTORE")
+            val relStorePass = localProps.getProperty("RELEASE_STORE_PASSWORD") ?: System.getenv("RELEASE_KEYSTORE_PASSWORD")
+            val relKeyAlias = localProps.getProperty("RELEASE_KEY_ALIAS") ?: System.getenv("RELEASE_KEY_ALIAS")
+            val relKeyPass = localProps.getProperty("RELEASE_KEY_PASSWORD") ?: System.getenv("RELEASE_KEY_PASSWORD")
+
+            if (!relStoreFile.isNullOrEmpty()) {
+                storeFile = rootProject.file(relStoreFile)
+                storePassword = relStorePass
+                keyAlias = relKeyAlias
+                keyPassword = relKeyPass
+            }
         }
     }
 
